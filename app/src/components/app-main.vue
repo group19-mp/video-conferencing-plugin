@@ -246,10 +246,21 @@
           </svg>
           <div v-if="unreadMessages" class="unread-msg"></div>
         </sea-link>
+        <button @click="isOpen = !isOpen">
+          Whiteboard
+        </button>
       </div>
     </div>
 
-    
+    <!-- Whiteboard -->
+    <div v-if="isOpen">
+        <div class="overlay" @click.self="isOpen=false;">
+          <div class="modal">
+            <button @click="openwhiteboard">Open Whiteboard</button>
+            <div style="width: 600px; height: 550px;" id="wt-container"></div>
+          </div>
+        </div>
+      </div>
 
     <sea-modal
       xclass="panel -left panel-share"
@@ -317,6 +328,13 @@ export default {
     },
   },
   methods: {
+    openwhiteboard(){
+      console.log("hello");
+      var wt = new api.WhiteboardTeam('#wt-container', {
+            clientId: 'd76b0fd6b33e94906b0a5cfe33f81130',
+            boardCode: 'thisisgroup19testing'
+        });
+    },
     doVideo() {
       this.state.muteVideo = !this.state.muteVideo
       messages.emit("updateStream")
@@ -427,3 +445,52 @@ export default {
   },
 }
 </script>
+
+<style>
+.modal {
+  color: black;
+  width: 650px;
+  height: 630px;
+  margin: 0px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px 3px;
+  transition: all 0.2s ease-in;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.fadeIn-enter {
+  opacity: 0;
+}
+
+.fadeIn-leave-active {
+  opacity: 0;
+  transition: all 0.2s step-end;
+}
+
+.fadeIn-enter .modal,
+.fadeIn-leave-active.modal {
+  transform: scale(1.1);
+}
+button {
+  padding: 5px;
+  margin-top: 10px;
+  background-color: green;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #00000094;
+  z-index: 999;
+  transition: opacity 0.2s ease;
+}
+</style>
